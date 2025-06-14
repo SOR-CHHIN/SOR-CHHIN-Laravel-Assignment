@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,16 @@ Route::prefix('/authors') ->group(function(){
     Route::post('/create',[AuthorController::class,'create']);
     Route::put('/update/{id}',[AuthorController::class,'update']);
     Route::delete('/delete/{id}',[AuthorController::class,'delete']);
+
+});
+
+//Users
+Route::prefix('/users') ->group(function(){
+    Route::get('/',[UserController::class,'index']);
+    Route::get('/{id}',[UserController::class,'show']);
+    Route::post('/create',[UserController::class,'create']);
+    Route::put('/update/{id}',[UserController::class,'update']);
+    Route::delete('/delete/{id}',[UserController::class,'delete']);
 
 });
 

@@ -58,11 +58,12 @@ class BookController extends Controller
     ];
 
 
-    public function index(){
+    public function index()
+    {
         return response()->json([
-            'message'=>"get all books",
-            'data'=> $this->books
-        ],200);
+            'message' => "get all books",
+            'data' => $this->books
+        ], 200);
     }
 
 
@@ -115,7 +116,7 @@ class BookController extends Controller
         ], 200);
     }
 
-   public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         foreach ($this->books as $index => $book) {
             if ($book['id'] == $id) {
@@ -147,7 +148,7 @@ class BookController extends Controller
             if ($book['id'] == $id) {
                 return response()->json([
                     'message' => "Delete success",
-                    'id'=> $id
+                    'id' => $id
                 ], 200);
             }
         }

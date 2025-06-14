@@ -7,92 +7,71 @@ use Illuminate\Http\Request;
 class AuthorController extends Controller
 {
     public $authors = [
-    [
-        "id" => "A101",
-        "name" => "J.R.R. Tolkien",
-        "bio" => "English author best known for 'The Hobbit' and 'The Lord of the Rings'.",
-        "nationality" => "British"
-    ],
-    [
-        "id" => "A102",
-        "name" => "George Orwell",
-        "bio" => "English novelist and essayist, famous for '1984' and 'Animal Farm'.",
-        "nationality" => "British"
-    ],
-    [
-        "id" => "A103",
-        "name" => "Harper Lee",
-        "bio" => "American author known for her novel 'To Kill a Mockingbird'.",
-        "nationality" => "American"
-    ]
-];
+        [
+            "id" => "A101",
+            "name" => "J.R.R. Tolkien",
+            "bio" => "English author best known for 'The Hobbit' and 'The Lord of the Rings'.",
+            "nationality" => "British"
+        ],
+        [
+            "id" => "A102",
+            "name" => "George Orwell",
+            "bio" => "English novelist and essayist, famous for '1984' and 'Animal Farm'.",
+            "nationality" => "British"
+        ],
+        [
+            "id" => "A103",
+            "name" => "Harper Lee",
+            "bio" => "American author known for her novel 'To Kill a Mockingbird'.",
+            "nationality" => "American"
+        ]
+    ];
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response() -> json([
-            'message'=> "get all authors",
-            'data'=> $this->authors
+        return response()->json([
+            'message' => "get all authors",
+            'data' => $this->authors
         ]);
     }
-
-
     /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
     {
-     return response()->json([
-        'message'=>"creat author successfully",
-        'data'=>[
-            'id'=> $request -> id,
-            'name'=> $request ->name,
-            'bio'=> $request->bio,
-            'nationality'=> $request->nationality
+        return response()->json([
+            'message' => "creat author successfully",
+            'data' => [
+                'id' => $request->id,
+                'name' => $request->name,
+                'bio' => $request->bio,
+                'nationality' => $request->nationality
 
-        ]
-        ],201);
+            ]
+        ], 201);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
     /**
      * Display the specified resource.
      */
-  public function show(string $id)
-{
-    foreach ($this->authors as $author) {
-        if ($author['id'] == $id) {
-            return response()->json([
-                'message' => 'Author found',
-                'data' => $author
-            ], 200);
-        }
-    }
-
-    return response()->json([
-        'message' => 'Author not found',
-       
-    ], 404);
-}
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function show(string $id)
     {
-        //
-    }
+        foreach ($this->authors as $author) {
+            if ($author['id'] == $id) {
+                return response()->json([
+                    'message' => 'Author found',
+                    'data' => $author
+                ], 200);
+            }
+        }
 
+        return response()->json([
+            'message' => 'Author not found',
+
+        ], 404);
+    }
     /**
      * Update the specified resource in storage.
      */
@@ -121,13 +100,13 @@ class AuthorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-     public function delete(string $id)
+    public function delete(string $id)
     {
         foreach ($this->authors as $index => $author) {
             if ($author['id'] == $id) {
                 return response()->json([
                     'message' => "Delete author success",
-                    'id'=> $id
+                    'id' => $id
                 ], 200);
             }
         }
