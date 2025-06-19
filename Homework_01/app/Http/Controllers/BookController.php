@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -59,10 +60,12 @@ class BookController extends Controller
 
 
     public function index()
+    
     {
+        $book = new Book();
         return response()->json([
             'message' => "get all books",
-            'data' => $this->books
+            'data' => Book::all(),
         ], 200);
     }
 
@@ -72,86 +75,73 @@ class BookController extends Controller
      */
     public function create(Request $request)
     {
-        return response()->json([
+        $book = Book::create([
+            'title'=>$request->title,
+            'author'=>$request-> author,
+            'published_year'=>$request->published_year
+
+        ]);
+        if($book){
+             return response()->json([
             'message' => 'create successfuly',
-            'data' => [
-                'id' => $request->id,
-                'title' => $request->title,
-                'authorId' => $request->authorId,
-                'isbn' => $request->isbn,
-                'publicationYear' => $request->publicationYear,
-                'genre' => $request->genre,
-                'availableCopies' => $request->availableCopies
-
-
-            ]
-        ], 201);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function find($books, $id)
-    {
-        foreach ($books as $book) {
-            if ($book['id'] == $id) {
-                return $book;
-            }
+            'data' => $book
+                
+        ], 201); 
         }
-        return 'Book not found';
-    }
-    public function show(Request $request, string $id)
-    {
         return response()->json([
-            'message' => 'Book found',
-            'data' => $this->find($this->books, $id)
-        ], 200);
+            'message'=>'Book create failed'
+        ],203);
+      
+    }
+
+
+    public function show( string $id)
+    {
+        $book = Book::where('id',$id)->get();
+        if($book){
+            return response()-> json([
+                'message'=>"Book show success",
+                'data'=>$book
+            ],200);
+        }
+        return response()->json([
+            'message'=> "book cannot show"
+        ],203);
     }
 
     public function update(Request $request, $id)
     {
-        foreach ($this->books as $index => $book) {
-            if ($book['id'] == $id) {
-                // If no data is sent, return the current book data
-                if (empty($request->all())) {
-                    return response()->json([
-                        'message' => 'Showing current book.',
-                        'book' => $book
-                    ]);
-                }
-                // If data is sent, overwrite with request data
-                $this->books[$index] = $request->all();
-
-                return response()->json([
-                    'message' => 'Book updated successfully',
-                    'book' => $this->books[$index]
-                ]);
-            }
+       $book = Book::where('id',$id)->update([
+        'title'=>$request->title,
+            'author'=>$request-> author,
+            'published_year'=>$request->published_year
+       ]);
+       if($book){
+           return response()->json([
+                'message'=> "book updated successfully",
+                'data'=>$book
+            ],201);
+       }
+            return response()->json(['message' => 'Book not found'], 404);
         }
-        return response()->json(['message' => 'Book not found'], 404);
-    }
+   
+    
 
     /**
      * Remove the specified resource from storage.
      */
     public function delete(string $id)
     {
-        foreach ($this->books as $index => $book) {
-            if ($book['id'] == $id) {
-                return response()->json([
-                    'message' => "Delete success",
-                    'id' => $id
-                ], 200);
-            }
+        $book = Book::where('id',$id)->delete([
+
+        ]);
+        if($book){
+            return response()->json([
+                'message'=>"delete book success",
+                'data' => $book
+            ],200);
         }
+        
 
         // If book not found
         return response()->json([
