@@ -4,28 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateBookRequest;
 use App\Http\Requests\UpdateBookRequest;
-use App\Models\Book;
+use App\Models\Books;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
    
     public function index()
-    
-    {
-        $book = new Book();
-        return response()->json([
-            'message' => 'get all books',
-            'data' => Book::all(),
-        ], 200);
-    }
+{
+    $books = Books::with('author')->get();
+
+    return response()->json($books->map(function ($book) {
+        return [
+            'id' => $book->id,
+            'title' => $book->title,
+            'author' => $book->author->name
+        ];
+    }));
+}
 
 
     /**
      * Show the form for creating a new resource.
      */
     public function create(CreateBookRequest $request){
-        $book = Book::create($request->all());
+        $book = Books::create($request->all());
 
         return response()->json([
             'message'=>'Book create successfully',
@@ -36,21 +39,22 @@ class BookController extends Controller
     }
 
 
-    public function show( string $id)
-    {
-        $book = Book::where('id',$id)->get();
-        if($book){
-            return response()-> json([
-                'message'=>'Book show success',
-                'data'=>$book
-            ],200);
-        }
-       
-    }
+   public function show($id)
+{
+    $book = Books::with('author')->findOrFail($id);
+
+    return response()->json([
+        'id' => $book->id,
+        'title' => $book->title,
+        'description' => $book->description,
+        'published_year' => $book->published_year,
+        'author' => $book->author->name,
+    ]);
+}
 
     public function update(UpdateBookRequest $request, $id)
     {
-       $book = Book::where('id',$id)->update([
+       $book = Books::where('id',$id)->update([
         'title'=>$request->title,
             'author'=>$request-> author,
             'published_year'=>$request->published_year
@@ -71,7 +75,7 @@ class BookController extends Controller
      */
     public function delete(string $id)
     {
-        $book = Book::where('id',$id)->delete();
+        $book = Books::where('id',$id)->delete();
         if($book){
             return response()->json([
                 'message'=>'delete book success',
